@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Speech Showing</string>
+    <string name="button_name_1">Listen!</string>
+    <string name="button_name_0">Stop!</string>
+</resources>
