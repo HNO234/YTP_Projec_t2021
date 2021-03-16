@@ -1,0 +1,46 @@
+#include <SoftwareSerial.h>
+#include <Wire.h>
+#include "FastLED.h"
+
+#define high 0
+#define low 255
+#define NUM_LEDS 20
+#define DATA_PIN 12
+#define statusCount 4
+
+SoftwareSerial BT(10,11);
+CRGB leds[NUM_LEDS];
+
+String LEDstatus;
+
+String defaultStatus[107] = {"red","green","blue","white"};
+int bulbR[107] = {255,0,0,255};
+int bulbG[107] = {0,255,0,255};
+int bulbB[107] = {0,0,255,255};
+
+void setup()
+{
+ delay( 3000 ); 
+ FastLED.addLeds<WS2811, DATA_PIN>(leds, NUM_LEDS);
+ Serial.begin(9600);
+ BT.begin(115200); 
+
+ for (int i=0;i<NUM_LEDS;i++)
+   leds[i]=CRGB::Black;
+}
+
+void loop()
+{
+    BT.listen();
+    
+    while (BT.available()>0){
+      LEDstatus = BT.readString();
+      Serial.println(LEDstatus);
+
+      for (int i=0;i<statusCount;i++){
+        if (LEDstatus == defaultStatus[i]){
+          fill_solid(leds,NUM_LEDS,CRGB(bulbR[i],bulbG[i],bulbB[i]));
+        }
+      }
+    }
+}
